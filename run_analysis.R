@@ -24,7 +24,7 @@ for (file in files) {
 
 # Requirement 2 -----------------------------------------------------------
 
-# Read in merged test data
+# Prepare variable names
 features <- read.csv("data/UCI HAR Dataset/features.txt", sep = "", header = FALSE)
 varNames <- features[, 2]
 meanPos <- grepl("-mean()", varNames)
@@ -58,6 +58,8 @@ write.table(keptMeasurements, file = "data/processed/keptMeasurements.txt", )
 
 activities <- read.csv("data/processed/merged/y_merged.txt", header = FALSE)
 activity_labels <- read.csv("data/UCI HAR Dataset/activity_labels.txt", sep = "", header = FALSE)
+
+# Create a "activity" column in "activities" containing descriptive activity names
 activities$activity <- activity_labels[activities$V1, 2]
 
 # Requirement 4 ---------------------------------------------------------
@@ -78,9 +80,16 @@ write.table(combined, file = "data/processed/combined.txt")
 
 combined <- read.table("data/processed/combined.txt", check.names=FALSE)
 library(dplyr)
+# Finding the average of each variable for each activity and each subject.
 tidySet <- combined %>% group_by(subject, activity) %>% summarise_each(funs(mean))
+
+# However, the column names that "tidySet" inherited from "combined" are not correct any more,
+# except for "subject" and "activity". We need to change the name like "tBodyAcc-mean()-X" 
+# to "avg of tBodyAcc-mean()-X", and attached the proper variable names to "tidySet"
 newColNames <- paste("avg of", names(tidySet))
 newColNames[1] <- names(tidySet)[1]
 newColNames[2] <- names(tidySet)[2]
 names(tidySet) <- newColNames
+
+# Finally, we write out "tidySet" to a file with with write.table() using row.name=FALSE
 write.table(tidySet, file = "data/processed/tidySet.txt", row.name=FALSE)
