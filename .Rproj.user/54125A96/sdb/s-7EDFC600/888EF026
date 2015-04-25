@@ -1,21 +1,21 @@
 {
     "contents" : "",
-    "created" : 1429851075945.000,
+    "created" : 1429982967893.000,
     "dirty" : false,
     "encoding" : "",
     "folds" : "",
     "hash" : "0",
-    "id" : "25313F43",
+    "id" : "888EF026",
     "lastKnownWriteTime" : 7741240722073845761,
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "caption" : "tidySet",
-        "contentUrl" : "content?title=tidySet&file=c85e75b93c74452d8d89f6279aca9db0.htm",
-        "displayedObservations" : "180",
+        "caption" : "combined",
+        "contentUrl" : "content?title=combined&file=60407451e7c443d382bd79133f732616.htm",
+        "displayedObservations" : 1000,
         "displayedVariables" : 81,
-        "totalObservations" : "180",
-        "variables" : "81"
+        "totalObservations" : 10299,
+        "variables" : 81
     },
     "source_on_save" : false,
     "type" : "r_dataframe"
