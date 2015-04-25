@@ -63,6 +63,52 @@ img {
 
 <div id="tidydataproject" class="section level1">
 <h1>tidyDataProject</h1>
+<p>This is README file for the tidyDataProject, the course project for “Getting and Cleaning Data” course on Coursera.</p>
+<p>You can clone this project with command</p>
+<p>git clone <a href="https://github.com/dlu66061/tidyDataProject.git">https://github.com/dlu66061/tidyDataProject.git</a></p>
+<p>and open the tidyDataProject in RStudio. Open <em>run_analysis.R</em> in the source editor and you can run the script line by line to inspect how it works.</p>
+<p>This project including the following major files and folders:</p>
+<ul>
+<li>CodeBook.md: the code book that describes the variables, the data, and transformations</li>
+<li>README.md: this file that you are reading. It describes how the project works and how to reproduce the result.</li>
+<li><p>run_analysis.R: the R script that does the following.</p>
+<ol style="list-style-type: decimal">
+<li>Merges the training and the test sets to create one data set.</li>
+<li>Extracts only the measurements on the mean and standard deviation for each measurement.</li>
+<li>Uses descriptive activity names to name the activities in the data set</li>
+<li>Appropriately labels the data set with descriptive variable names.</li>
+<li>From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.</li>
+</ol></li>
+<li><p>tidyDataProject.Rproj: the project file for RStudio</p></li>
+</ul>
+<div id="how-does-the-scirpt-work" class="section level2">
+<h2>How does the scirpt work?</h2>
+<div id="requirement-1-merges-the-training-and-the-test-sets-to-create-one-data-set." class="section level4">
+<h4>Requirement 1: “Merges the training and the test sets to create one data set.”</h4>
+<p>My interpretation is that the new data set should be something similar to “training” and “test” sets, which in its current form are directories and files with certain naming convention. Therefore, I created a directory called <em>data/processed/merged</em>, and created files that merged corresponding files from <em>data/UCI HAR Dataset/train</em> and <em>data/UCI HAR Dataset/test</em>. For example, <em>X_merged.txt</em> file is a merge of <em>X_train.txt</em> and <em>X_test.txt</em> in their respective directories.</p>
+</div>
+<div id="requirement-2-extracts-only-the-measurements-on-the-mean-and-standard-deviation-for-each-measurement." class="section level4">
+<h4>Requirement 2: “Extracts only the measurements on the mean and standard deviation for each measurement.”</h4>
+<p>My understanding of “the mean and standard deviation for each measurement” is those features in in <em>features.txt</em> file with “-mean()” and “-std()” in their names. Thus, we read in all variable names into varNames, used grepl function to find locations of those with “-mean()” and “-std()”, and merged location with a OR operation, and assigned it to namePos, and used it to extract only those measurements later on.</p>
+<p>By examining <em>X_train.txt</em> and <em>X_test.txt</em> as text files, and the number of featues in <em>features.txt</em>, we can determine that the data file is of fixed width format, with 561 variables, each occupying 16 charaters (numbers). With this large number of variables and the number of observations, the loading of the merged file with “read.fwf” method requires a huge amount of memory, although the final data frame is much smaller. Thus, I had to limit the number of records to each read, and kept reading until the end of file.</p>
+<p>Meanwhile, to facilitate “rbind” method, I attached varName to the read-in data frame, which basically satisfied the Requirement 4 below. Then we extracted the wanted columns with namePos, and combined all observations into keptMeasurements data frame.</p>
+<p>Since this processing is time consuming, we saved it to a file called “data/processed/keptMeasurements.txt”</p>
+</div>
+<div id="requirement-3-uses-descriptive-activity-names-to-name-the-activities-in-the-data-set" class="section level4">
+<h4>Requirement 3: “Uses descriptive activity names to name the activities in the data set”</h4>
+<p>We read in all the activities from the <em>y_merged.txt</em> file into “activities”. Since it contains only activity labels, we have use the description in <em>data/UCI HAR Dataset/activity_labels.txt</em> to attach the descriptive name to it with the following script: <code>activities$activity &lt;- activity_labels[activities$V1, 2]</code></p>
+</div>
+<div id="requirement-4-appropriately-labels-the-data-set-with-descriptive-variable-names." class="section level4">
+<h4>Requirement 4: “Appropriately labels the data set with descriptive variable names.”</h4>
+<p>This requirement is satisfield in the steps for Requirement 2, as described above.</p>
+<p>At this point, we need to merge the “subject” read from <em>subject_merged.txt</em> file, “activities”, and “keptMeasurements” into a single data frame “combined”, and prepare for the next requirement.</p>
+</div>
+<div id="requirement-5-from-the-data-set-in-step-4-creates-a-second-independent-tidy-data-set-with-the-average-of-each-variable-for-each-activity-and-each-subject." class="section level4">
+<h4>Requirement 5: “From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.”</h4>
+<p>Finally, we utilized “dplyr” package and its “group_by” and “summarise_each” methods to accomplish this task, and assigned it to “tidySet” variable. However, the column names that “tidySet” inherited from “combined” are not correct any more, except for “subject” and “activity”. We need to change the name like “tBodyAcc-mean()-X” to “avg of tBodyAcc-mean()-X”, and attached the proper variable names to “tidySet”.</p>
+<p>Finally, we write out “tidySet” to a file.</p>
+</div>
+</div>
 </div>
 
 
