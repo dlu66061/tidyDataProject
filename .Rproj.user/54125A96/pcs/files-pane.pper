@@ -1,0 +1,9 @@
+{
+    "path" : "C:/Projects/R/tidyDataProject/data/UCI HAR Dataset",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
